@@ -15,13 +15,58 @@ public final class Ex4 {
     private static final int CUTOFF = 20;       // Cut-off for recursive quicksort
 
     public static void insertionSort (String[] w) {
-
+        int j;
+        for (int p = 1; p < w.length; p++) {
+            String tmp = w[p];
+            for (j = p; j > 0 && tmp.compareTo(w[j-1]) < 0 ; j--) {
+                w[j] = w[j-1];
+            }
+            w[j] = tmp;
+        }
     }
 
-
-
     public static void quickSort (String[] w) {
+        quicksort(w, 0, w.length-1);
+    }
 
+    private static Comparable median3 (String[] w,int left, int right) {
+        int center = (left + right)/2;
+        if (w[center].compareTo(w[left]) < 0)
+            swapReferences(w,left, center);
+        if (w[right].compareTo(w[left]) < 0)
+            swapReferences(w,left, right);
+        if (w[right].compareTo(w[center]) < 0)
+            swapReferences(w, center, right);
+        // Placera pivoten
+        swapReferences(w,center, right-1);
+        return w[right-1];
+    }
+
+    private static void quicksort(String[] w, int left, int right) {
+        if ((left + CUTOFF) <= right) // Gör quicksort
+        { Comparable pivot = median3(w, left, right);
+            // Starta partitionering
+            int i = left, j = right - 1;
+            for ( ; ; )
+            { while (w[++i].compareTo(String.valueOf(pivot)) < 0){}
+                while (w[--j].compareTo(String.valueOf(pivot)) > 0){}
+                if (i < j)
+                    swapReferences(w, i, j);
+                else
+                    break;
+            }
+            swapReferences(w, i, right-1); // Återställ pivoten i mitten
+            quicksort(w, left, i-1); // Sortera S1 rekursivt
+            quicksort(w, i+1, right); // Sortera S2 rekursivt
+        }
+         else // Gör en insättningssortering på delräckan
+            insertionSort(w);
+    }
+
+    private static void swapReferences (String[] w, int left, int right) {
+        String temp = w[left];
+        w[left] = w[right];
+        w[right] = temp;
     }
 
 
